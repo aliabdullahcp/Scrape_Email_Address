@@ -7,19 +7,18 @@ import pandas as pd
 
 original_url = input("Enter the website url: ")
 
-unscraped = deque([original_url])
+un_scraped = deque([original_url])
 
 scraped = set()
 
-
 emails = set()
 
-while len(unscraped):
-    url = unscraped.popleft()
+while len(un_scraped):
+    url = un_scraped.popleft()
     scraped.add(url)
 
     parts = urlsplit(url)
-    #SplitResult(scheme='https', netloc='www.google.com', path='/example', query='', fragment='')
+    # SplitResult(scheme='https', netloc='www.google.com', path='/example', query='', fragment='')
     base_url = "{0.scheme}://{0.netloc}".format(parts)
     if '/' in parts.path:
         path = url[:url.rfind('/') + 1]
@@ -50,9 +49,10 @@ while len(unscraped):
                 link = path + link
 
             if not link.endswith(".gz"):
-                if not link in unscraped and not link in scraped:
-                    unscraped.append(link)
+                if link not in un_scraped and link not in scraped:
+                    un_scraped.append(link)
 
 df = pd.DataFrame(emails, columns=["Email"])
+
 print(df)
 df.to_csv('email.csv', index=False)
